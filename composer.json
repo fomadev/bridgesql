@@ -1,0 +1,29 @@
+{
+    "name": "fomadev/bridgesql",
+    "description": "BridgeSQL - Une bibliothèque PHP légère pour simplifier l'utilisation de PDO avec MySQL (et futurs SGBD).",
+    "type": "library",
+    "license": "MIT",
+
+    "authors": [
+        {
+            "name": "MOLENGO MALANDA FORDI",
+            "email": "fordimalanda7@gmail.com",
+            "role": "Developer"
+        }
+    ],
+
+    "autoload": {
+        "psr-4": {
+            "BridgeSQL\\": "src/"
+        }
+    },
+
+    "require": {
+        "php": ">=8.0"
+    },
+
+    "require-dev": {
+        "phpunit/phpunit": "^10.0",
+        "friendsofphp/php-cs-fixer": "^3.0"
+    }
+}
