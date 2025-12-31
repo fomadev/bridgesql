@@ -168,6 +168,8 @@ Annule une transaction.
 #### `lastInsertId(): string`
 Retourne le dernier ID inséré.
 
+### Voir <a href="docs/bridgesql_v1.pptx">La présentation PowerPoint</a>
+
 ## 🔒 Sécurité
 
 - ✅ Toutes les requêtes utilisent des requêtes préparées
