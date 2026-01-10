@@ -2,6 +2,16 @@
 
 Tous les changements notables de ce projet seront documentés dans ce fichier.
 
+## [1.0.4] - 2026
+
+### Ajouté
+- Nouvelle méthode `count()` pour compter facilement les résultats sans écrire "SELECT COUNT(*)"
+- Support simplifié des requêtes de comptage
+
+### Amélioré
+- Documentation enrichie avec la nouvelle méthode `count()`
+- Exemples d'utilisation de la méthode `count()`
+
 ## [1.0.0] - 2025
 
 ### Ajouté
