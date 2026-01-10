@@ -9,7 +9,7 @@ use BridgeSQL\Exceptions\BridgeSQLException;
  * BridgeSQL
  * 
  * Bibliothèque légère pour simplifier l'utilisation de PDO avec MySQL.
- * Version 1.0.0 - MySQL uniquement
+ * Version 1.0.4 - MySQL uniquement
  */
 class BridgeSQL
 {
@@ -182,5 +182,26 @@ class BridgeSQL
     public function lastInsertId(?string $name = null): string
     {
         return $this->connection->lastInsertId($name);
+    }
+
+    /**
+     * Compte le nombre de lignes correspondant à une requête
+     * 
+     * @param string $sql La requête SQL (peut utiliser COUNT(*))
+     * @param array $params Les paramètres à lier
+     * @return int Le nombre de lignes
+     * @throws BridgeSQLException
+     */
+    public function count(string $sql, array $params = []): int
+    {
+        $result = $this->fetch($sql, $params);
+        
+        if ($result === null) {
+            return 0;
+        }
+        
+        // Récupère la première valeur du résultat (le COUNT)
+        $firstValue = reset($result);
+        return (int) $firstValue;
     }
 }
