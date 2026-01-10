@@ -2,10 +2,10 @@
 
 BridgeSQL est une bibliothèque PHP légère et moderne qui simplifie l'utilisation de PDO avec MySQL.
 
-Cette version **1.0.0** est volontairement minimale et se concentre sur :
+Cette version **1.0.4** est volontairement légère et se concentre sur :
 - ✅ Configuration simple et intuitive
 - ✅ Requêtes préparées sécurisées
-- ✅ Méthodes utilitaires pratiques (`fetch`, `fetchAll`, `execute`, transactions, etc.)
+- ✅ Méthodes utilitaires pratiques (`fetch`, `fetchAll`, `execute`, `count`, transactions, etc.)
 - ✅ Gestion d'erreurs robuste
 - ✅ Code propre et bien documenté
 
@@ -18,11 +18,6 @@ BridgeSQL/
 │   └── Exceptions/         # Exceptions personnalisées
 │       └── BridgeSQLException.php
 ├── examples/               # Exemples d'utilisation
-│   ├── config.php         # Configuration de base de données
-│   ├── simple_example.php # Exemple basique
-│   ├── commandes_list.php # Exemple avec affichage HTML
-│   ├── ajouter_commande.php # Exemple de formulaire
-│   └── transactions_example.php # Exemple de transactions
 ├── tests/                  # Tests unitaires
 │   └── test_connection.php
 ├── config/                 # Fichiers de configuration d'exemple
