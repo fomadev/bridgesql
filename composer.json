@@ -1,6 +1,6 @@
 {
     "name": "fomadev/bridgesql",
-    "description": "BridgeSQL - Une bibliothèque PHP légère pour simplifier l'utilisation de PDO avec MySQL (et futurs SGBD).",
+    "description": "BridgeSQL v1.0.4 - Une bibliothèque PHP légère pour simplifier l'utilisation de PDO avec MySQL (et futurs SGBD).",
     "type": "library",
     "license": "MIT",
 
