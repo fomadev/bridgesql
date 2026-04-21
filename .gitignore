@@ -22,3 +22,5 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+
+composer.lock

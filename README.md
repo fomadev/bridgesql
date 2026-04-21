@@ -1,191 +1,84 @@
-# BridgeSQL
+# BridgeSQL v2
 
-BridgeSQL est une bibliothèque PHP légère et moderne qui simplifie l'utilisation de PDO avec MySQL.
+**BridgeSQL** is a lightweight, universal PHP library designed to simplify the use of PDO. It acts as a robust bridge between your code and **10 different database management systems (DBMS)**, automating connection configuration and data type management.
 
-Cette version **1.0.4** est volontairement légère et se concentre sur :
-- ✅ Configuration simple et intuitive
-- ✅ Requêtes préparées sécurisées
-- ✅ Méthodes utilitaires pratiques (`fetch`, `fetchAll`, `execute`, `count`, transactions, etc.)
-- ✅ Gestion d'erreurs robuste
-- ✅ Code propre et bien documenté
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PHP Version](https://img.shields.io/badge/PHP-%3E%3D%208.0-blue.svg)](https://www.php.net/)
 
-## 📋 Structure du Projet
+## Features
 
-```
-BridgeSQL/
-├── src/                    # Code source de la bibliothèque
-│   ├── BridgeSQL.php      # Classe principale
-│   └── Exceptions/         # Exceptions personnalisées
-│       └── BridgeSQLException.php
-├── examples/               # Exemples d'utilisation
-├── tests/                  # Tests unitaires
-│   └── test_connection.php
-├── config/                 # Fichiers de configuration d'exemple
-│   └── database.example.php
-├── vendor/                 # Dépendances Composer (généré)
-├── composer.json           # Configuration Composer
-├── .gitignore             # Fichiers à ignorer par Git
-└── README.md              # Ce fichier
-```
+- **Multi-DBMS Support**: A single interface for 10 SQL engines (MySQL, PostgreSQL, SQLite, Oracle, SQL Server, etc.).
+- **Auto-Typing**: Automatic detection of PDO types (Integer, Boolean, String, Null) via PHP 8 `match`.
+- **Parameter Flexibility**: Supports named (`:id`) and indexed (`?`) parameters.
+- **Security**: Systematic use of prepared statements with emulation disabled for maximum security.
+- **Lightweight**: No external dependencies required for basic operation.
 
-## 🚀 Installation
+## Installation
 
-### Avec Composer
+Use [Composer](https://getcomposer.org/) to install the library:
 
 ```bash
 composer require fomadev/bridgesql
 ```
 
-Ou si vous clonez ce dépôt :
+## Supported DBMS
 
-```bash
-composer install
-```
+BridgeSQL facilitates connection to the following systems :
+
+1. **MySQL**
+
+2. **MariaDB**
+
+3. **PostgreSQL**
+
+4. **SQLite** (Local file)
+
+5. **Microsoft SQL Server**
+
+6. **Oracle** (OCI)
+
+7. **IBM DB2**
+
+8. **Firebird**
+
+9. **Informix**
+
+10. **Sybase** (SAP ASE)
+
+## Quick Use
 
 ### Configuration
 
-1. Copiez le fichier `config/database.example.php` vers `examples/config.php`
-2. Modifiez les valeurs selon votre environnement :
+Create a configuration file (e.g., `config/database.php`):
 
 ```php
 return [
     'driver'   => 'mysql',
     'host'     => 'localhost',
-    'dbname'   => 'votre_base_de_donnees',
+    'dbname'   => 'ma_base',
     'username' => 'root',
     'password' => '',
-    'charset'  => 'utf8mb4',
+    'charset'  => 'utf8mb4'
 ];
 ```
 
-## 💡 Exemples d'utilisation
-
-### Exemple basique
+### Query execution
 
 ```php
-<?php
-require_once 'vendor/autoload.php';
+require 'vendor/autoload.php';
 
 use BridgeSQL\BridgeSQL;
-use BridgeSQL\Exceptions\BridgeSQLException;
 
-try {
-    $db = new BridgeSQL([
-        'driver'   => 'mysql',
-        'host'     => 'localhost',
-        'dbname'   => 'demo',
-        'username' => 'root',
-        'password' => '',
-    ]);
+$config = require 'config/database.php';
+$db = new BridgeSQL($config);
 
-    // Récupérer un utilisateur
-    $user = $db->fetch("SELECT * FROM users WHERE id = :id", ['id' => 1]);
-    
-    // Récupérer tous les utilisateurs
-    $users = $db->fetchAll("SELECT * FROM users");
-    
-    // Insérer un utilisateur
-    $rows = $db->execute(
-        "INSERT INTO users (name, email) VALUES (:name, :email)",
-        ['name' => 'Fordi', 'email' => 'fordimalanda7@gmail.com']
-    );
-    
-    echo "Lignes insérées : " . $rows . PHP_EOL;
-    echo "Dernier ID : " . $db->lastInsertId() . PHP_EOL;
+// Retrieve a single line
+$user = $db->fetch("SELECT * FROM users WHERE id = :id", ['id' => 1]);
 
-} catch (BridgeSQLException $e) {
-    echo "Erreur BridgeSQL : " . $e->getMessage();
-}
+// Retrieve all the lines
+$users = $db->fetchAll("SELECT * FROM users WHERE status = ?", ["active"]);
+
+// Insert data
+$db->execute("INSERT INTO users (name, email) VALUES (?, ?)", ["Molengo", "fordi@fomadev.com"]);
+$lastId = $db->lastInsertId();
 ```
-
-### Utilisation avec des transactions
-
-```php
-$db->beginTransaction();
-try {
-    $db->execute("UPDATE accounts SET balance = balance - :amount WHERE id = :id", [
-        'amount' => 100,
-        'id'     => 1,
-    ]);
-
-    $db->execute("UPDATE accounts SET balance = balance + :amount WHERE id = :id", [
-        'amount' => 100,
-        'id'     => 2,
-    ]);
-
-    $db->commit();
-    echo "Transaction réussie !";
-} catch (BridgeSQLException $e) {
-    $db->rollBack();
-    echo "Transaction annulée : " . $e->getMessage();
-}
-```
-
-### Exemples complets
-
-Consultez le dossier `examples/` pour des exemples plus complets :
-- `simple_example.php` - Utilisation basique
-- `commandes_list.php` - Affichage HTML avec liste de commandes
-- `ajouter_commande.php` - Formulaire d'ajout avec validation
-- `transactions_example.php` - Gestion des transactions
-
-## 📚 API Référence
-
-### Méthodes principales
-
-#### `__construct(array $config)`
-Crée une nouvelle instance de BridgeSQL avec la configuration fournie.
-
-#### `getPdo(): PDO`
-Retourne l'instance PDO brute pour des opérations avancées.
-
-#### `query(string $sql, array $params = []): \PDOStatement`
-Exécute une requête préparée et retourne le PDOStatement.
-
-#### `fetch(string $sql, array $params = []): ?array`
-Récupère une seule ligne (retourne `null` si aucune ligne trouvée).
-
-#### `fetchAll(string $sql, array $params = []): array`
-Récupère toutes les lignes.
-
-#### `execute(string $sql, array $params = []): int`
-Exécute une requête d'écriture (INSERT, UPDATE, DELETE) et retourne le nombre de lignes affectées.
-
-#### `beginTransaction(): bool`
-Démarre une transaction.
-
-#### `commit(): bool`
-Valide une transaction.
-
-#### `rollBack(): bool`
-Annule une transaction.
-
-#### `lastInsertId(): string`
-Retourne le dernier ID inséré.
-
-### Voir <a href="docs/bridgesql_v1.pptx">La présentation PowerPoint</a>
-
-## 🔒 Sécurité
-
-- ✅ Toutes les requêtes utilisent des requêtes préparées
-- ✅ Protection contre les injections SQL
-- ✅ Gestion d'erreurs robuste
-- ✅ Validation des paramètres
-
-## 🛠️ Requirements
-
-- PHP >= 8.0
-- PDO MySQL extension
-- Composer (pour l'autoloading)
-
-## 📄 Licence
-
-MIT License - Voir le fichier `LICENSE` pour plus de détails.
-
-## 👨‍💻 Auteur
-
-Développé par l'équipe **FomaDev** avec l'ambition de simplifier les connexions entre PHP et les bases de données 💡
-
-## 🤝 Contribution
-
-Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou une pull request.

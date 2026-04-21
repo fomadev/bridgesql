@@ -1,207 +1,80 @@
 <?php
 namespace BridgeSQL;
 
-use PDO;
-use PDOException;
+use BridgeSQL\Drivers\DriverFactory;
 use BridgeSQL\Exceptions\BridgeSQLException;
+use PDO;
 
-/**
- * BridgeSQL
- * 
- * Bibliothèque légère pour simplifier l'utilisation de PDO avec MySQL.
- * Version 1.0.4 - MySQL uniquement
- */
-class BridgeSQL
-{
+class BridgeSQL {
     private PDO $connection;
 
-    /**
-     * Constructeur
-     * 
-     * @param array $config [
-     *   'driver'   => 'mysql',
-     *   'host'     => 'localhost',
-     *   'dbname'   => 'database_name',
-     *   'username' => 'root',
-     *   'password' => '',
-     *   'charset'  => 'utf8mb4'
-     * ]
-     * 
-     * @throws BridgeSQLException
-     */
-    public function __construct(array $config)
-    {
-        $driver   = $config['driver'] ?? 'mysql';
-        $host     = $config['host'] ?? 'localhost';
-        $dbname   = $config['dbname'] ?? '';
-        $username = $config['username'] ?? 'root';
-        $password = $config['password'] ?? '';
-        $charset  = $config['charset'] ?? 'utf8mb4';
-
-        if ($driver !== 'mysql') {
-            // Version 1.0 : seul MySQL est supporté
-            throw new BridgeSQLException("Driver non supporté dans cette version : {$driver}. Utilisez 'mysql'.");
-        }
-
-        try {
-            $dsn = "$driver:host=$host;dbname=$dbname;charset=$charset";
-            $this->connection = new PDO($dsn, $username, $password, [
-                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES   => false,
-            ]);
-        } catch (PDOException $e) {
-            throw new BridgeSQLException("Erreur de connexion : " . $e->getMessage(), (int) $e->getCode());
-        }
+    public function __construct(array $config) {
+        $this->connection = DriverFactory::create($config);
     }
 
     /**
-     * Retourne l'instance PDO brute (si besoin avancé)
+     * Exécute une requête SQL préparée avec gestion automatique des types.
      */
-    public function getPdo(): PDO
-    {
-        return $this->connection;
-    }
-
-    /**
-     * Exécute une requête préparée et retourne le PDOStatement
-     * 
-     * @param string $sql La requête SQL à exécuter
-     * @param array $params Les paramètres à lier (peuvent être nommés ou positionnels)
-     * @return \PDOStatement
-     * @throws BridgeSQLException
-     */
-    public function query(string $sql, array $params = []): \PDOStatement
-    {
+    public function query(string $sql, array $params = []): \PDOStatement {
         try {
             $stmt = $this->connection->prepare($sql);
             
-            if (!empty($params)) {
-                foreach ($params as $key => $value) {
-                    // Gestion des paramètres nommés et positionnels
-                    $paramKey = is_int($key) ? $key + 1 : (str_starts_with($key, ':') ? $key : ':' . $key);
-                    
-                    // Détermination du type PDO approprié
-                    $type = PDO::PARAM_STR;
-                    if (is_int($value)) {
-                        $type = PDO::PARAM_INT;
-                    } elseif (is_bool($value)) {
-                        $type = PDO::PARAM_BOOL;
-                    } elseif (is_null($value)) {
-                        $type = PDO::PARAM_NULL;
-                    }
-                    
-                    $stmt->bindValue($paramKey, $value, $type);
-                }
+            foreach ($params as $key => $value) {
+                // Gestion des clés (indexées ou nommées)
+                $paramKey = is_int($key) ? $key + 1 : (str_starts_with($key, ':') ? $key : ':' . $key);
+                
+                // Détection automatique du type PDO
+                $type = match (true) {
+                    is_int($value)  => PDO::PARAM_INT,
+                    is_bool($value) => PDO::PARAM_BOOL,
+                    is_null($value) => PDO::PARAM_NULL,
+                    default         => PDO::PARAM_STR,
+                };
+
+                $stmt->bindValue($paramKey, $value, $type);
             }
             
             $stmt->execute();
             return $stmt;
-        } catch (PDOException $e) {
-            throw new BridgeSQLException("Erreur SQL : " . $e->getMessage(), (int) $e->getCode());
+        } catch (\PDOException $e) {
+            throw new BridgeSQLException("Erreur SQL : " . $e->getMessage());
         }
     }
 
-    /**
-     * Récupère une seule ligne
-     * 
-     * @param string $sql La requête SQL
-     * @param array $params Les paramètres à lier
-     * @return array|null Retourne un tableau associatif ou null si aucune ligne trouvée
-     */
-    public function fetch(string $sql, array $params = []): ?array
-    {
+    public function fetch(string $sql, array $params = []): ?array {
         $stmt = $this->query($sql, $params);
-        $row = $stmt->fetch();
-        return $row === false ? null : $row;
+        return $stmt->fetch() ?: null;
     }
 
-    /**
-     * Récupère toutes les lignes
-     * 
-     * @param string $sql La requête SQL
-     * @param array $params Les paramètres à lier
-     * @return array Retourne un tableau de tableaux associatifs
-     */
-    public function fetchAll(string $sql, array $params = []): array
-    {
+    public function fetchAll(string $sql, array $params = []): array {
         $stmt = $this->query($sql, $params);
         return $stmt->fetchAll();
     }
 
-    /**
-     * Exécute une requête d'écriture (INSERT, UPDATE, DELETE)
-     * et retourne le nombre de lignes affectées.
-     * 
-     * @param string $sql La requête SQL
-     * @param array $params Les paramètres à lier
-     * @return int Le nombre de lignes affectées
-     */
-    public function execute(string $sql, array $params = []): int
-    {
+    public function execute(string $sql, array $params = []): int {
         $stmt = $this->query($sql, $params);
         return $stmt->rowCount();
     }
 
-    /**
-     * Démarre une transaction
-     * 
-     * @return bool True si la transaction a démarré avec succès
-     */
-    public function beginTransaction(): bool
-    {
-        return $this->connection->beginTransaction();
+    // --- Méthodes de transaction et utilitaires ---
+
+    public function beginTransaction(): bool { 
+        return $this->connection->beginTransaction(); 
     }
 
-    /**
-     * Valide une transaction
-     * 
-     * @return bool True si la transaction a été validée avec succès
-     */
-    public function commit(): bool
-    {
-        return $this->connection->commit();
+    public function commit(): bool { 
+        return $this->connection->commit(); 
     }
 
-    /**
-     * Annule une transaction
-     * 
-     * @return bool True si la transaction a été annulée avec succès
-     */
-    public function rollBack(): bool
-    {
-        return $this->connection->rollBack();
+    public function rollBack(): bool { 
+        return $this->connection->rollBack(); 
     }
 
-    /**
-     * Retourne le dernier ID inséré
-     * 
-     * @param string|null $name Nom de la séquence (optionnel, pour PostgreSQL)
-     * @return string Le dernier ID inséré
-     */
-    public function lastInsertId(?string $name = null): string
-    {
-        return $this->connection->lastInsertId($name);
+    public function lastInsertId(?string $name = null): string|false { 
+        return $this->connection->lastInsertId($name); 
     }
 
-    /**
-     * Compte le nombre de lignes correspondant à une requête
-     * 
-     * @param string $sql La requête SQL (peut utiliser COUNT(*))
-     * @param array $params Les paramètres à lier
-     * @return int Le nombre de lignes
-     * @throws BridgeSQLException
-     */
-    public function count(string $sql, array $params = []): int
-    {
-        $result = $this->fetch($sql, $params);
-        
-        if ($result === null) {
-            return 0;
-        }
-        
-        // Récupère la première valeur du résultat (le COUNT)
-        $firstValue = reset($result);
-        return (int) $firstValue;
+    public function getPdo(): PDO { 
+        return $this->connection; 
     }
 }

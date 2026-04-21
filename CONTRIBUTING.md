@@ -1,117 +1,112 @@
-# Guide de Contribution
+# Contributing Guide
 
-Merci de votre intérêt pour contribuer à BridgeSQL ! Ce document fournit des directives pour contribuer au projet.
+Thank you for your interest in contributing to BridgeSQL. This document provides the necessary guidelines to ensure a consistent and efficient contribution process.
 
-## 🚀 Démarrage rapide
+## Quick Start
 
-1. **Fork** le projet
-2. **Clone** votre fork : `git clone https://github.com/fomadev/BridgeSQL.git`
-3. **Créez une branche** pour votre fonctionnalité : `git checkout -b feature/ma-fonctionnalite`
-4. **Installez les dépendances** : `composer install`
+1. **Fork** the repository on GitHub.
+2. **Clone** your fork locally: `git clone https://github.com/fomadev/BridgeSQL.git`
+3. **Create a branch** for your feature or fix: `git checkout -b feature/your-feature-name`
+4. **Install dependencies**: Execute `composer install` to set up the development environment.
 
-## 📝 Standards de code
+## Code Standards
 
-### Style de code
-- Suivez les standards **PSR-12** pour le style de code PHP
-- Utilisez des **espaces** (4 espaces) pour l'indentation, pas de tabulations
-- Ajoutez une ligne vide à la fin de chaque fichier
+### Coding Style
+- Adhere strictly to **PSR-12** coding standards.
+- Use **4 spaces** for indentation (no tabs).
+- Ensure every file ends with a single empty line.
 
 ### Documentation
-- Documentez toutes les méthodes publiques avec **PHPDoc**
-- Incluez des exemples dans la documentation quand c'est pertinent
-- Mettez à jour le `README.md` si vous ajoutez de nouvelles fonctionnalités
+- All public methods must be documented using **PHPDoc** blocks.
+- Provide inline comments for complex logic.
+- Update the `README.md` if you introduce new features or change existing behavior.
 
-### Exemples
-- Créez des exemples dans `examples/` pour les nouvelles fonctionnalités
-- Assurez-vous que les exemples fonctionnent et sont bien documentés
-- Suivez le style des exemples existants
+### Examples
+- Add relevant scripts to the `examples/` directory for any new functionality.
+- Ensure all examples are functional and follow the existing naming convention (e.g., `feature_name_example.php`).
 
-## 🧪 Tests
+## Testing
 
-- Ajoutez des tests pour les nouvelles fonctionnalités dans `tests/`
-- Assurez-vous que tous les tests passent avant de soumettre une pull request
-- Testez avec différentes versions de PHP (>= 8.0)
+- New features must include corresponding unit tests in the `tests/` directory.
+- All existing and new tests must pass before submitting a pull request.
+- Verify compatibility with PHP versions >= 8.0.
 
-## 📦 Structure des commits
+## Commit Structure
 
-Utilisez des messages de commit clairs et descriptifs :
+BridgeSQL follows a structured commit message format to maintain a clear project history:
 
-```
-feat: Ajout de la méthode fetchColumn()
-fix: Correction du binding des paramètres NULL
-docs: Mise à jour de la documentation des transactions
-refactor: Amélioration de la gestion des erreurs
-```
+### Commit Types
+- `feat`: A new feature.
+- `fix`: A bug fix.
+- `docs`: Documentation changes only.
+- `style`: Changes that do not affect the meaning of the code (white-space, formatting, etc.).
+- `refactor`: A code change that neither fixes a bug nor adds a feature.
+- `test`: Adding missing tests or correcting existing tests.
+- `chore`: Maintenance tasks or dependency updates.
 
-### Types de commits
-- `feat` : Nouvelle fonctionnalité
-- `fix` : Correction de bug
-- `docs` : Documentation uniquement
-- `style` : Formatage, point-virgule manquant, etc.
-- `refactor` : Refactorisation du code
-- `test` : Ajout ou modification de tests
-- `chore` : Maintenance, dépendances, etc.
+## Pull Request Process
 
-## 🔀 Processus de Pull Request
+1. Verify that your code complies with the project's standards.
+2. Run all tests locally.
+3. Update the `CHANGELOG.md` to reflect your changes.
+4. Submit the pull request with a comprehensive description of the modifications.
+5. Address any feedback or requested changes from the maintainers.
 
-1. **Assurez-vous** que votre code suit les standards
-2. **Testez** votre code localement
-3. **Mettez à jour** le `CHANGELOG.md` avec vos changements
-4. **Créez** une pull request avec une description claire
-5. **Répondez** aux commentaires et suggestions
-
-### Template de Pull Request
+### Pull Request Template
 
 ```markdown
 ## Description
-Brève description de ce que fait cette PR.
+A concise summary of the changes introduced by this PR.
 
-## Type de changement
-- [ ] Nouvelle fonctionnalité
-- [ ] Correction de bug
-- [ ] Amélioration de la documentation
-- [ ] Refactorisation
+## Type of Change
+- [ ] New feature
+- [ ] Bug fix
+- [ ] Documentation update
+- [ ] Refactoring
 
-## Tests
-Comment avez-vous testé ces changements ?
+## Testing
+Describe the methods used to test these changes.
 
 ## Checklist
-- [ ] Mon code suit les standards du projet
-- [ ] J'ai ajouté des tests pour les nouvelles fonctionnalités
-- [ ] J'ai mis à jour la documentation
-- [ ] J'ai mis à jour le CHANGELOG.md
+- [ ] My code follows the project's coding standards.
+- [ ] I have added tests for the new functionality.
+- [ ] I have updated the documentation accordingly.
+- [ ] I have updated the CHANGELOG.md.
 ```
 
-## 🐛 Signaler un bug
+## Reporting Issues
 
-Si vous trouvez un bug, veuillez créer une issue avec :
+To report a bug, please open a GitHub Issue including:
 
-1. **Description claire** du bug
-2. **Étapes pour reproduire** le problème
-3. **Comportement attendu** vs comportement actuel
-4. **Version PHP** et environnement
-5. **Code d'exemple** si possible
+1. A clear and descriptive title.
 
-## 💡 Proposer une fonctionnalité
+2. Detailed steps to reproduce the issue.
 
-Pour proposer une nouvelle fonctionnalité :
+3. The expected vs. actual behavior.
 
-1. Créez une issue avec le label `enhancement`
-2. Décrivez la fonctionnalité et son utilité
-3. Expliquez comment elle s'intègre dans le projet
-4. Attendez les retours avant de commencer à coder
+4. Your PHP version and environment details.
 
-## 📚 Ressources
+5. A code snippet demonstrating the problem.
 
-- [PSR-12 Coding Style Guide](https://www.php-fig.org/psr/psr-12/)
-- [PSR-4 Autoloading Standard](https://www.php-fig.org/psr/psr-4/)
-- [Semantic Versioning](https://semver.org/)
+## Feature Requests
 
-## ❓ Questions ?
+For new feature proposals:
 
-Si vous avez des questions, n'hésitez pas à :
-- Ouvrir une issue
-- Contacter les mainteneurs du projet
+1. Open an issue with the enhancement label.
 
-Merci de contribuer à BridgeSQL ! 🎉
+2. Explain the utility and implementation strategy of the feature.
 
+3. Wait for maintainer feedback before proceeding with the code.
+
+## Resources
+
+[PSR-12 Coding Style Guide](https://www.php-fig.org/psr/psr-12/)
+
+[PSR-4 Autoloading Standard](https://www.php-fig.org/psr/psr-4/)
+
+[Semantic Versioning](https://semver.org/)
+
+## Contact
+For further inquiries, please open an issue or contact the project maintainers directly.
+
+Thank you for contributing to BridgeSQL.
