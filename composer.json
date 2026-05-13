@@ -3,7 +3,7 @@
     "description": "Universal PDO library supporting 10 DBMS.",
     "type": "library",
     "version": "2.0.1",
-    "license": "MIT",
+    "license": "proprietary",
     "authors": [
         {
             "name": "MOLENGO MALANDA FORDI",

@@ -2,7 +2,7 @@
 
 **BridgeSQL** is a lightweight, universal PHP library designed to simplify the use of PDO. It acts as a robust bridge between your code and **10 different database management systems (DBMS)**, automating connection configuration, data type management, and query debugging.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: FPL](https://img.shields.io/badge/License-FPL-orange.svg)](LICENSE)
 [![PHP Version](https://img.shields.io/badge/PHP-%3E%3D%208.0-blue.svg)](https://www.php.net/)
 
 ## Features
@@ -106,3 +106,11 @@ try {
 ## Contributing
 
 Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+
+## License
+
+This project is licensed under the **FomaDev Public License (FPL)**. 
+- **Free** for use as a dependency in personal and commercial projects.
+- **Paid** license required for redistribution, derivative libraries, or competing commercial services.
+
+See the [LICENSE](LICENSE) file for the full text.

@@ -1,4 +1,9 @@
 <?php
+/* * Copyright (c) 2026 Fordi / FomaDev. 
+ * Licensed under FomaDev Public License.
+ * See LICENSE file in the project root for full license information.
+ */
+
 require_once '../src/BridgeSQL.php';
 require_once '../src/Drivers/DriverFactory.php';
 require_once '../src/Exceptions/BridgeSQLException.php';
