@@ -1,6 +1,6 @@
 # Contributing Guide
 
-Thank you for your interest in contributing to BridgeSQL. This document provides the necessary guidelines to ensure a consistent and efficient contribution process.
+Thank you for your interest in contributing to BridgeSQL. This document provides the necessary guidelines to ensure a consistent and efficient contribution process under the FomaDev Public License (FPL).
 
 ## Quick Start
 
@@ -22,7 +22,7 @@ Thank you for your interest in contributing to BridgeSQL. This document provides
 - Update the `README.md` if you introduce new features or change existing behavior.
 
 ### Examples
-- Add relevant scripts to the `examples/` directory for any new functionality.
+- Add relevant scripts to the `examples/` directory for any new functionality (e.g., debugging, new drivers).
 - Ensure all examples are functional and follow the existing naming convention (e.g., `feature_name_example.php`).
 
 ## Testing
@@ -36,7 +36,7 @@ Thank you for your interest in contributing to BridgeSQL. This document provides
 BridgeSQL follows a structured commit message format to maintain a clear project history:
 
 ### Commit Types
-- `feat`: A new feature.
+- `feat`: A new feature (e.g., logging system).
 - `fix`: A bug fix.
 - `docs`: Documentation changes only.
 - `style`: Changes that do not affect the meaning of the code (white-space, formatting, etc.).
@@ -46,11 +46,11 @@ BridgeSQL follows a structured commit message format to maintain a clear project
 
 ## Pull Request Process
 
-1. Verify that your code complies with the project's standards.
-2. Run all tests locally.
-3. Update the `CHANGELOG.md` to reflect your changes.
-4. Submit the pull request with a comprehensive description of the modifications.
-5. Address any feedback or requested changes from the maintainers.
+1. **License Compliance**: By submitting a Pull Request, you agree that your contribution will be licensed under the FomaDev Public License (FPL).
+2. **No Independent Forks**: Remember that permanent forks for independent redistribution are prohibited by the FPL. Forks are strictly for contributing back to the official FomaDev repository.
+3. **Verification**: Verify that your code complies with the project's standards and run all tests locally.
+4. **Submission**: Submit the pull request with a comprehensive description of the modifications.
+5. **Feedback**: Address any feedback or requested changes from the maintainers.
 
 ### Pull Request Template
 
@@ -71,7 +71,7 @@ Describe the methods used to test these changes.
 - [ ] My code follows the project's coding standards.
 - [ ] I have added tests for the new functionality.
 - [ ] I have updated the documentation accordingly.
-- [ ] I have updated the CHANGELOG.md.
+- [ ] I agree that this contribution is under the FomaDev Public License (FPL).
 ```
 
 ## Reporting Issues
@@ -100,13 +100,15 @@ For new feature proposals:
 
 ## Resources
 
-[PSR-12 Coding Style Guide](https://www.php-fig.org/psr/psr-12/)
+* [PSR-12 Coding Style Guide](https://www.php-fig.org/psr/psr-12/)
 
-[PSR-4 Autoloading Standard](https://www.php-fig.org/psr/psr-4/)
+* [PSR-4 Autoloading Standard](https://www.php-fig.org/psr/psr-4/)
 
-[Semantic Versioning](https://semver.org/)
+* [Semantic Versioning](https://semver.org/)
 
-## Contact
-For further inquiries, please open an issue or contact the project maintainers directly.
+* [FomaDev Public License (FPL)](LICENSE)
+
+Contact
+For further inquiries, please open an issue or contact the project maintainers directly ([Fordi](https://github.com/fordimalanda) - FomaDev).
 
 Thank you for contributing to BridgeSQL.
