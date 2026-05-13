@@ -1,6 +1,6 @@
-# BridgeSQL v2
+# BridgeSQL v2.0.1
 
-**BridgeSQL** is a lightweight, universal PHP library designed to simplify the use of PDO. It acts as a robust bridge between your code and **10 different database management systems (DBMS)**, automating connection configuration and data type management.
+**BridgeSQL** is a lightweight, universal PHP library designed to simplify the use of PDO. It acts as a robust bridge between your code and **10 different database management systems (DBMS)**, automating connection configuration, data type management, and query debugging.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PHP Version](https://img.shields.io/badge/PHP-%3E%3D%208.0-blue.svg)](https://www.php.net/)
@@ -11,6 +11,7 @@
 - **Auto-Typing**: Automatic detection of PDO types (Integer, Boolean, String, Null) via PHP 8 `match`.
 - **Parameter Flexibility**: Supports named (`:id`) and indexed (`?`) parameters.
 - **Security**: Systematic use of prepared statements with emulation disabled for maximum security.
+- **Logging & Debugging**: Track execution time and view interpolated SQL queries for easier debugging.
 - **Lightweight**: No external dependencies required for basic operation.
 
 ## Installation
@@ -23,27 +24,25 @@ composer require fomadev/bridgesql
 
 ## Supported DBMS
 
-BridgeSQL facilitates connection to the following systems :
+BridgeSQL facilitates connection to the following systems:
 
-1. **MySQL**
+1. **MySQL** & **MariaDB**
 
-2. **MariaDB**
+2. **PostgreSQL**
 
-3. **PostgreSQL**
+3. **SQLite** (Local file or `:memory:`)
 
-4. **SQLite** (Local file)
+4. **Microsoft SQL Server** (MSSQL)
 
-5. **Microsoft SQL Server**
+5. **Oracle** (OCI)
 
-6. **Oracle** (OCI)
+6. **IBM DB2**
 
-7. **IBM DB2**
+7. **Firebird**
 
-8. **Firebird**
+8. **Informix**
 
-9. **Informix**
-
-10. **Sybase** (SAP ASE)
+9. **Sybase** (SAP ASE)
 
 ## Quick Use
 
@@ -55,14 +54,14 @@ Create a configuration file (e.g., `config/database.php`):
 return [
     'driver'   => 'mysql',
     'host'     => 'localhost',
-    'dbname'   => 'ma_base',
+    'dbname'   => 'my_database',
     'username' => 'root',
     'password' => '',
     'charset'  => 'utf8mb4'
 ];
 ```
 
-### Query execution
+### Query Execution & Debugging
 
 ```php
 require 'vendor/autoload.php';
@@ -75,10 +74,35 @@ $db = new BridgeSQL($config);
 // Retrieve a single line
 $user = $db->fetch("SELECT * FROM users WHERE id = :id", ['id' => 1]);
 
-// Retrieve all the lines
-$users = $db->fetchAll("SELECT * FROM users WHERE status = ?", ["active"]);
+// Insert data with auto-typing
+$db->execute("INSERT INTO users (name, active) VALUES (?, ?)", ["Molengo", true]);
 
-// Insert data
-$db->execute("INSERT INTO users (name, email) VALUES (?, ?)", ["Molengo", "fordi@fomadev.com"]);
-$lastId = $db->lastInsertId();
+// --- Debugging Features (New in v2.0.1) ---
+
+// Get the last executed query with parameters injected
+echo $db->getLastQuery(); 
+// Output: INSERT INTO users (name, active) VALUES ('Molengo', 1)
+
+// Get full session logs (SQL, duration, and timestamp)
+$logs = $db->getDebugLog();
+print_r($logs);
 ```
+
+### Transactions
+
+```php
+$db->beginTransaction();
+
+try {
+    $db->execute("UPDATE accounts SET balance = balance - 100 WHERE id = 1");
+    $db->execute("UPDATE accounts SET balance = balance + 100 WHERE id = 2");
+    $db->commit();
+} catch (Exception $e) {
+    $db->rollBack();
+    throw $e;
+}
+```
+
+## Contributing
+
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
