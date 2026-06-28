@@ -34,10 +34,14 @@ jobs:
         run: find src/ -type f -name "*.php" -exec php -l {} \;
 
       - name: 4. Install dependencies with Composer
-        run: composer install --prefer-dist --no-progress --ignore-platform-reqs
+        run: |
+          if [ "${{ matrix.php-version }}" = "8.0" ]; then
+            composer update --prefer-dist --no-progress --prefer-lowest --ignore-platform-reqs
+          else
+            composer install --prefer-dist --no-progress
+          fi
 
       - name: 5. Verify Code Style (PHP-CS-Fixer)
-        # Exécuté uniquement sur la version PHP 8.4 pour centraliser l'analyse de style
         if: matrix.php-version == '8.4'
         run: vendor/bin/php-cs-fixer fix --dry-run --diff
 
