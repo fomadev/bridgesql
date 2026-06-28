@@ -120,18 +120,87 @@ class BridgeSQL {
         return preg_replace($keys, $values, $sql, 1);
     }
 
-    // --- Méthodes de transaction et utilitaires ---
+    // --- Méthodes de transaction sécurisées (v2.0.2) ---
 
-    public function beginTransaction(): bool { 
-        return $this->connection->beginTransaction(); 
+    /**
+     * Begins a database transaction.
+     *
+     * @return bool True on success, false on failure.
+     * @throws BridgeSQLException If a transaction is already active.
+     */
+    public function beginTransaction(): bool {
+        try {
+            if ($this->connection->inTransaction()) {
+                throw new BridgeSQLException("A transaction is already active.");
+            }
+            
+            $this->logs[] = [
+                'sql'       => '-- BEGIN TRANSACTION --',
+                'duration'  => '0ms',
+                'timestamp' => date('Y-m-d H:i:s')
+            ];
+            
+            return $this->connection->beginTransaction();
+        } catch (\PDOException $e) {
+            throw new BridgeSQLException("Failed to begin transaction: " . $e->getMessage());
+        }
     }
 
-    public function commit(): bool { 
-        return $this->connection->commit(); 
+    /**
+     * Commits the current transaction.
+     *
+     * @return bool True on success, false on failure.
+     * @throws BridgeSQLException If no transaction is active.
+     */
+    public function commit(): bool {
+        try {
+            if (!$this->connection->inTransaction()) {
+                throw new BridgeSQLException("No active transaction to commit.");
+            }
+
+            $this->logs[] = [
+                'sql'       => '-- COMMIT --',
+                'duration'  => '0ms',
+                'timestamp' => date('Y-m-d H:i:s')
+            ];
+
+            return $this->connection->commit();
+        } catch (\PDOException $e) {
+            throw new BridgeSQLException("Failed to commit transaction: " . $e->getMessage());
+        }
     }
 
-    public function rollBack(): bool { 
-        return $this->connection->rollBack(); 
+    /**
+     * Rolls back the current transaction.
+     *
+     * @return bool True on success, false on failure.
+     * @throws BridgeSQLException If no transaction is active.
+     */
+    public function rollBack(): bool {
+        try {
+            if (!$this->connection->inTransaction()) {
+                throw new BridgeSQLException("No active transaction to roll back.");
+            }
+
+            $this->logs[] = [
+                'sql'       => '-- ROLLBACK --',
+                'duration'  => '0ms',
+                'timestamp' => date('Y-m-d H:i:s')
+            ];
+
+            return $this->connection->rollBack();
+        } catch (\PDOException $e) {
+            throw new BridgeSQLException("Failed to roll back transaction: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Checks if inside a transaction.
+     *
+     * @return bool
+     */
+    public function inTransaction(): bool {
+        return $this->connection->inTransaction();
     }
 
     public function lastInsertId(?string $name = null): string|false { 
