@@ -1,7 +1,8 @@
-# BridgeSQL v2.0.1
+# BridgeSQL v2.0.2
 
-**BridgeSQL** is a lightweight, universal PHP library designed to simplify the use of PDO. It acts as a robust bridge between your code and **10 different database management systems (DBMS)**, automating connection configuration, data type management, and query debugging.
+**BridgeSQL** is a lightweight, universal PHP library designed to simplify the use of PDO. It acts as a robust bridge between your code and **10 different database management systems (DBMS)**, automating connection configuration, data type management, query debugging, and transaction safety.
 
+[![Build Status](https://github.com/fomadev/bridgesql/actions/workflows/ci.yml/badge.svg)](https://github.com/fomadev/bridgesql/actions)
 [![License: FPL](https://img.shields.io/badge/License-FPL-orange.svg)](LICENSE)
 [![PHP Version](https://img.shields.io/badge/PHP-%3E%3D%208.0-blue.svg)](https://www.php.net/)
 
@@ -12,6 +13,7 @@
 - **Parameter Flexibility**: Supports named (`:id`) and indexed (`?`) parameters.
 - **Security**: Systematic use of prepared statements with emulation disabled for maximum security.
 - **Logging & Debugging**: Track execution time and view interpolated SQL queries for easier debugging.
+- **Transaction Management**: Secure native handling of transactional states to prevent concurrency or duplicate initialization errors.
 - **Lightweight**: No external dependencies required for basic operation.
 
 ## Installation

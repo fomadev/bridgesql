@@ -7,7 +7,7 @@ Thank you for your interest in contributing to BridgeSQL. This document provides
 1. **Fork** the repository on GitHub.
 2. **Clone** your fork locally: `git clone https://github.com/fomadev/BridgeSQL.git`
 3. **Create a branch** for your feature or fix: `git checkout -b feature/your-feature-name`
-4. **Install dependencies**: Execute `composer install` to set up the development environment.
+4. **Install dependencies**: Execute `composer install` to set up the development environment, including PHPUnit and PHP-CS-Fixer.
 
 ## Code Standards
 
@@ -16,20 +16,26 @@ Thank you for your interest in contributing to BridgeSQL. This document provides
 - Use **4 spaces** for indentation (no tabs).
 - Ensure every file ends with a single empty line.
 
+Before committing any code, you must validate and automatically format your files by running PHP-CS-Fixer in your terminal:
+```bash
+vendor/bin/php-cs-fixer fix
+```
+
 ### Documentation
 - All public methods must be documented using **PHPDoc** blocks.
 - Provide inline comments for complex logic.
 - Update the `README.md` if you introduce new features or change existing behavior.
 
-### Examples
-- Add relevant scripts to the `examples/` directory for any new functionality (e.g., debugging, new drivers).
-- Ensure all examples are functional and follow the existing naming convention (e.g., `feature_name_example.php`).
-
 ## Testing
 
 - New features must include corresponding unit tests in the `tests/` directory.
-- All existing and new tests must pass before submitting a pull request.
 - Verify compatibility with PHP versions >= 8.0.
+- All existing and new tests must pass before submitting a pull request.
+
+To execute the test suite locally using the in-memory SQLite configuration, run:
+```bash
+vendor/bin/phpunit
+```
 
 ## Commit Structure
 
