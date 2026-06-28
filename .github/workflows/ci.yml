@@ -34,9 +34,10 @@ jobs:
         run: find src/ -type f -name "*.php" -exec php -l {} \;
 
       - name: 4. Install dependencies with Composer
+        # On ignore les plateformes uniquement sur 8.0 pour permettre l'installation globale du projet
         run: |
           if [ "${{ matrix.php-version }}" = "8.0" ]; then
-            composer update --prefer-dist --no-progress --prefer-lowest --ignore-platform-reqs
+            composer install --prefer-dist --no-progress --ignore-platform-reqs
           else
             composer install --prefer-dist --no-progress
           fi
@@ -46,4 +47,6 @@ jobs:
         run: vendor/bin/php-cs-fixer fix --dry-run --diff
 
       - name: 6. Run Unit Tests (PHPUnit)
+        # PHPUnit 10 requiert PHP >= 8.1. On n'exécute le test que sur les versions compatibles.
+        if: matrix.php-version != '8.0'
         run: vendor/bin/phpunit
