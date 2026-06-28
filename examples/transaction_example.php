@@ -1,4 +1,5 @@
 <?php
+
 require_once '../src/BridgeSQL.php';
 require_once '../src/Drivers/DriverFactory.php';
 require_once '../src/Exceptions/BridgeSQLException.php';
@@ -12,7 +13,7 @@ $config = [
 
 try {
     $db = new BridgeSQL($config);
-    
+
     // Configuration de la structure de test
     $db->execute("CREATE TABLE accounts (id INTEGER PRIMARY KEY, name TEXT, balance REAL)");
     $db->execute("INSERT INTO accounts (name, balance) VALUES ('Alice', 500.0), ('Bob', 150.0)");
@@ -22,7 +23,7 @@ try {
 
     // Étape 1 : Débiter Alice
     $db->execute("UPDATE accounts SET balance = balance - 200 WHERE name = ?", ['Alice']);
-    
+
     // Étape 2 : Créditer Bob
     $db->execute("UPDATE accounts SET balance = balance + 200 WHERE name = ?", ['Bob']);
 

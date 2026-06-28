@@ -1,4 +1,5 @@
 <?php
+
 require_once '../src/BridgeSQL.php';
 require_once '../src/Drivers/DriverFactory.php';
 require_once '../src/Exceptions/BridgeSQLException.php';
@@ -17,7 +18,7 @@ $config = [
 try {
     $db = new BridgeSQL($config);
     echo "Successfully connected to PostgreSQL !\n";
-    
+
 } catch (Exception $e) {
     echo "Erreur PostgreSQL : " . $e->getMessage();
 }

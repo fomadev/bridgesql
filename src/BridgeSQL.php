@@ -1,5 +1,6 @@
 <?php
-/* * Copyright (c) 2026 Fordi / FomaDev. 
+
+/* * Copyright (c) 2026 Fordi / FomaDev.
  * Licensed under FomaDev Public License.
  * See LICENSE file in the project root for full license information.
  */
@@ -10,31 +11,34 @@ use BridgeSQL\Drivers\DriverFactory;
 use BridgeSQL\Exceptions\BridgeSQLException;
 use PDO;
 
-class BridgeSQL {
+class BridgeSQL
+{
     private PDO $connection;
     private ?string $lastQuery = null;
     private array $logs = [];
 
-    public function __construct(array $config) {
+    public function __construct(array $config)
+    {
         $this->connection = DriverFactory::create($config);
     }
 
     /**
-     * Exécute une requête SQL préparée avec gestion automatique des types, 
+     * Exécute une requête SQL préparée avec gestion automatique des types,
      * logs de performance et interpolation pour le debug.
      */
-    public function query(string $sql, array $params = []): \PDOStatement {
+    public function query(string $sql, array $params = []): \PDOStatement
+    {
         try {
             // Sauvegarde de la requête interpolée pour le debug
             $this->lastQuery = $this->interpolateQuery($sql, $params);
             $startTime = microtime(true);
 
             $stmt = $this->connection->prepare($sql);
-            
+
             foreach ($params as $key => $value) {
                 // Gestion des clés (indexées ou nommées)
                 $paramKey = is_int($key) ? $key + 1 : (str_starts_with($key, ':') ? $key : ':' . $key);
-                
+
                 // Détection automatique du type PDO
                 $type = match (true) {
                     is_int($value)  => PDO::PARAM_INT,
@@ -45,7 +49,7 @@ class BridgeSQL {
 
                 $stmt->bindValue($paramKey, $value, $type);
             }
-            
+
             $stmt->execute();
 
             // Calcul de la durée et ajout au log
@@ -62,17 +66,20 @@ class BridgeSQL {
         }
     }
 
-    public function fetch(string $sql, array $params = []): ?array {
+    public function fetch(string $sql, array $params = []): ?array
+    {
         $stmt = $this->query($sql, $params);
         return $stmt->fetch() ?: null;
     }
 
-    public function fetchAll(string $sql, array $params = []): array {
+    public function fetchAll(string $sql, array $params = []): array
+    {
         $stmt = $this->query($sql, $params);
         return $stmt->fetchAll();
     }
 
-    public function execute(string $sql, array $params = []): int {
+    public function execute(string $sql, array $params = []): int
+    {
         $stmt = $this->query($sql, $params);
         return $stmt->rowCount();
     }
@@ -80,21 +87,24 @@ class BridgeSQL {
     /**
      * Retourne la dernière requête exécutée (avec paramètres injectés).
      */
-    public function getLastQuery(): ?string {
+    public function getLastQuery(): ?string
+    {
         return $this->lastQuery;
     }
 
     /**
      * Retourne l'historique des requêtes et performances.
      */
-    public function getDebugLog(): array {
+    public function getDebugLog(): array
+    {
         return $this->logs;
     }
 
     /**
      * Simule l'injection des paramètres dans le SQL pour faciliter le debug.
      */
-    private function interpolateQuery(string $sql, array $params): string {
+    private function interpolateQuery(string $sql, array $params): string
+    {
         $keys = [];
         $values = [];
 
@@ -128,18 +138,19 @@ class BridgeSQL {
      * @return bool True on success, false on failure.
      * @throws BridgeSQLException If a transaction is already active.
      */
-    public function beginTransaction(): bool {
+    public function beginTransaction(): bool
+    {
         try {
             if ($this->connection->inTransaction()) {
                 throw new BridgeSQLException("A transaction is already active.");
             }
-            
+
             $this->logs[] = [
                 'sql'       => '-- BEGIN TRANSACTION --',
                 'duration'  => '0ms',
                 'timestamp' => date('Y-m-d H:i:s')
             ];
-            
+
             return $this->connection->beginTransaction();
         } catch (\PDOException $e) {
             throw new BridgeSQLException("Failed to begin transaction: " . $e->getMessage());
@@ -152,7 +163,8 @@ class BridgeSQL {
      * @return bool True on success, false on failure.
      * @throws BridgeSQLException If no transaction is active.
      */
-    public function commit(): bool {
+    public function commit(): bool
+    {
         try {
             if (!$this->connection->inTransaction()) {
                 throw new BridgeSQLException("No active transaction to commit.");
@@ -176,7 +188,8 @@ class BridgeSQL {
      * @return bool True on success, false on failure.
      * @throws BridgeSQLException If no transaction is active.
      */
-    public function rollBack(): bool {
+    public function rollBack(): bool
+    {
         try {
             if (!$this->connection->inTransaction()) {
                 throw new BridgeSQLException("No active transaction to roll back.");
@@ -199,15 +212,18 @@ class BridgeSQL {
      *
      * @return bool
      */
-    public function inTransaction(): bool {
+    public function inTransaction(): bool
+    {
         return $this->connection->inTransaction();
     }
 
-    public function lastInsertId(?string $name = null): string|false { 
-        return $this->connection->lastInsertId($name); 
+    public function lastInsertId(?string $name = null): string|false
+    {
+        return $this->connection->lastInsertId($name);
     }
 
-    public function getPdo(): PDO { 
-        return $this->connection; 
+    public function getPdo(): PDO
+    {
+        return $this->connection;
     }
 }

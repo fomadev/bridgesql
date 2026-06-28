@@ -1,20 +1,23 @@
 <?php
-/* * Copyright (c) 2026 Fordi / FomaDev. 
+
+/* * Copyright (c) 2026 Fordi / FomaDev.
  * Licensed under FomaDev Public License.
  * See LICENSE file in the project root for full license information.
  */
 
 namespace BridgeSQL\Drivers;
 
-use PDO;
 use BridgeSQL\Exceptions\BridgeSQLException;
+use PDO;
 
-class DriverFactory {
+class DriverFactory
+{
     /**
      * Crée une instance PDO basée sur la configuration fournie.
      * Supporte la personnalisation des options PDO.
      */
-    public static function create(array $config): PDO {
+    public static function create(array $config): PDO
+    {
         $driver   = strtolower($config['driver'] ?? 'mysql');
         $host     = $config['host'] ?? 'localhost';
         $dbname   = $config['dbname'] ?? '';
